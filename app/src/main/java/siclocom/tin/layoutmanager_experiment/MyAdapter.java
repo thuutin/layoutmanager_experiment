@@ -1,5 +1,6 @@
 package siclocom.tin.layoutmanager_experiment;
 
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.VH> {
   }
 
   @Override public void onBindViewHolder(VH holder, int position) {
+    if (position % 2 == 0){
+      holder.tv.setBackgroundColor(Color.GRAY);
+    } else {
+      holder.tv.setBackgroundColor(0);
+
+    }
     holder.tv.setText(String.valueOf(position));
   }
 
@@ -29,7 +36,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.VH> {
 
 
   @Override public int getItemCount() {
-    return 20000;
+    return 2000;
   }
 
   public static class VH extends RecyclerView.ViewHolder {

@@ -14,30 +14,39 @@ public class MyLayoutManager extends RecyclerView.LayoutManager {
   private int mItem = 5;
   private int mItemOffset;
 
+  private static final int ITEM_HEIGHT = 48 * 2;
+  private int mDy;
+
   public MyLayoutManager() {
   }
 
   @Override public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
-    Log.d(MyLayoutManager.class.getSimpleName(), "onLayoutChildren: " );
+    Log.d(MyLayoutManager.class.getSimpleName(), "onLayoutChildren: ");
+
+    final int itemsNeededToLayout = getHeight() / ITEM_HEIGHT;
+
+    fill(recycler, state, itemsNeededToLayout);
+  }
+
+  private void fill(RecyclerView.Recycler recycler, RecyclerView.State state,
+      int itemsNeededToLayout) {
     detachAndScrapAttachedViews(recycler);
+
     if (state.getItemCount() > 0) {
-     final int count = state.getItemCount();
-     for (int i = 0; i < count; i++) {
-        View view = recycler.getViewForPosition(i);
-       measureChild(view ,0, 0);
-       final int height = getDecoratedMeasuredHeight(view);
-       final int width = getDecoratedMeasuredWidth(view);
-       addView(view);
-       layoutDecorated(view, 0, i * 48, width, i * 48 + height);
-     }
-   }
+      for (int i = 0; i < itemsNeededToLayout; i++) {
+          View view = recycler.getViewForPosition(mItem + i);
+        measureChild(view, 0, 0);
+        final int height = ITEM_HEIGHT;
+        final int width = getDecoratedMeasuredWidth(view);
+        addView(view);
+        layoutDecorated(view, 0, i * ITEM_HEIGHT, width, i * ITEM_HEIGHT + height);
+      }
+    }
   }
 
   @Override public RecyclerView.LayoutParams generateDefaultLayoutParams() {
-    return new RecyclerView.LayoutParams(
-        ViewGroup.LayoutParams.WRAP_CONTENT,
-        ViewGroup.LayoutParams.WRAP_CONTENT
-    );
+    return new RecyclerView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+        ViewGroup.LayoutParams.WRAP_CONTENT);
   }
 
   @Override public void scrollToPosition(int position) {
@@ -48,9 +57,10 @@ public class MyLayoutManager extends RecyclerView.LayoutManager {
   @Override
   public int scrollVerticallyBy(int dy, RecyclerView.Recycler recycler, RecyclerView.State state) {
     Log.d(MyLayoutManager.class.getSimpleName(), "Dy: +" + dy);
-    mItem = dy / 96;
-    mItemOffset = dy % 96;
-    offsetChildrenVertical(-dy);
+    mDy += dy;
+    mItem += mDy / 96;
+    mItemOffset += mDy % 96;
+    fill(recycler, state, getHeight() / ITEM_HEIGHT);
     return dy;
   }
 
@@ -59,7 +69,7 @@ public class MyLayoutManager extends RecyclerView.LayoutManager {
   }
 
   @Override public void layoutDecorated(View child, int left, int top, int right, int bottom) {
-    //Log.d(MyLayoutManager.class.getSimpleName(), " Layout Child: " + child.toString() + " left: " + left + " top: " + top + " right: " + right + " bottom: " + bottom);
+    Log.d(MyLayoutManager.class.getSimpleName(), " Layout Child: " + child.toString() + " left: " + left + " top: " + top + " right: " + right + " bottom: " + bottom);
     super.layoutDecorated(child, left, top, right, bottom);
   }
 }
