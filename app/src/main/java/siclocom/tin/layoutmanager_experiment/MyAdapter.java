@@ -21,22 +21,20 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.VH> {
   }
 
   @Override public void onBindViewHolder(VH holder, int position) {
-    if (position % 2 == 0){
-      holder.tv.setBackgroundColor(Color.GRAY);
-    } else {
-      holder.tv.setBackgroundColor(0);
-
-    }
-    holder.tv.setText(String.valueOf(position));
+    //if (position % 2 == 0){
+    //  holder.tv.setBackgroundColor(Color.GRAY);
+    //} else {
+    //  holder.tv.setBackgroundColor(0);
+    //}
+    holder.tv.setText( "    " + String.valueOf(position));
   }
 
   @Override public long getItemId(int position) {
     return position;
   }
 
-
   @Override public int getItemCount() {
-    return 2000;
+    return 100;
   }
 
   public static class VH extends RecyclerView.ViewHolder {
